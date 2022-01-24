@@ -1,0 +1,2 @@
+# struct-copy
+struct copy
