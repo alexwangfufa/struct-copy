@@ -37,13 +37,13 @@ func init() {
 }
 
 type MaterialGroup struct {
-	Id         primitive.ObjectID `bson:"_id,omitempty"`
-	Name       string             `bson:"name"`
-	Type       MaterialGroupType  `bson:"type,omitempty"`
-	Scope      MaterialGroupScope `bson:"scope,omitempty"`
-	Order      int64              `bson:"order"`
-	CreateTime time.Time          `bson:"createTime,omitempty"`
-	UpdateTime time.Time          `bson:"updateTime"`
+	Id         *primitive.ObjectID `bson:"_id,omitempty"`
+	Name       string              `bson:"name"`
+	Type       MaterialGroupType   `bson:"type,omitempty"`
+	Scope      MaterialGroupScope  `bson:"scope,omitempty"`
+	Order      int64               `bson:"order"`
+	CreateTime time.Time           `bson:"createTime,omitempty"`
+	UpdateTime time.Time           `bson:"updateTime"`
 }
 
 func ParseMaterialGroupType(s string) (*MaterialGroupType, error) {
