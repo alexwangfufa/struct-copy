@@ -1,4 +1,4 @@
-package main
+package copier
 
 import (
 	"errors"
@@ -7,8 +7,6 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"google.golang.org/protobuf/types/known/wrapperspb"
 	"reflect"
-	v1 "struct-copy/example/api/material-group/v1"
-	"struct-copy/example/domain"
 	"time"
 )
 
@@ -78,33 +76,33 @@ func copy(dst, src interface{}) (err error) {
 				if err != nil {
 					return err
 				}
-				dstValue.Field(i).Set(reflect.ValueOf(id))
+				dstValue.Field(i).Set(reflect.ValueOf(&id))
 			} else {
 				value := fieldValue.Elem().FieldByName("Value").String()
 				dstValue.Field(i).Set(reflect.ValueOf(value))
 			}
 		case int64Value:
-			value := fieldValue.Elem().Int()
+			value := fieldValue.FieldByName("Value").Int()
 			dstValue.Field(i).Set(reflect.ValueOf(value))
 		case int32Value:
-			value := fieldValue.Elem().Int()
+			value := fieldValue.FieldByName("Value").Int()
 			dstValue.Field(i).Set(reflect.ValueOf(int32(value)))
 		case uint64Value:
-			value := fieldValue.Int()
+			value := fieldValue.FieldByName("Value").Int()
 			dstValue.Field(i).Set(reflect.ValueOf(uint64(value)))
 		case uint32Value:
-			value := fieldValue.Int()
+			value := fieldValue.FieldByName("Value").Int()
 			dstValue.Field(i).Set(reflect.ValueOf(uint32(value)))
 		case doubleValue, floatValue:
-			value := fieldValue.Float()
+			value := fieldValue.FieldByName("Value").Float()
 			dstValue.Field(i).Set(reflect.ValueOf(value))
 		case boolValue:
-			value := fieldValue.Bool()
+			value := fieldValue.FieldByName("Value").Bool()
 			dstValue.Field(i).Set(reflect.ValueOf(value))
 		case pbTimestamp:
 			dstValue.Field(i).Set(reflect.ValueOf(floatValue))
 		case reflect.String:
-			value := fieldValue.Elem().String()
+			value := fieldValue.String()
 			if fieldValue.Kind() == stringValue {
 				spbString := &wrapperspb.StringValue{
 					Value: value,
@@ -115,7 +113,7 @@ func copy(dst, src interface{}) (err error) {
 			}
 
 		case reflect.Int64:
-			value := fieldValue.Elem().Int()
+			value := fieldValue.Int()
 			if fieldValue.Kind() == int64Value {
 				spbInt64 := &wrapperspb.Int64Value{
 					Value: value,
@@ -125,7 +123,7 @@ func copy(dst, src interface{}) (err error) {
 				dstValue.Field(i).Set(reflect.ValueOf(value))
 			}
 		case reflect.Int32:
-			value := fieldValue.Elem().Int()
+			value := fieldValue.Int()
 			if fieldValue.Kind() == int32Value {
 				spbInt32 := &wrapperspb.Int32Value{
 					Value: int32(value),
@@ -135,7 +133,7 @@ func copy(dst, src interface{}) (err error) {
 				dstValue.Field(i).Set(reflect.ValueOf(value))
 			}
 		case reflect.Uint64:
-			value := fieldValue.Elem().Int()
+			value := fieldValue.Int()
 			if fieldValue.Kind() == uint64Value {
 				spbUint64 := &wrapperspb.UInt64Value{
 					Value: uint64(value),
@@ -145,7 +143,7 @@ func copy(dst, src interface{}) (err error) {
 				dstValue.Field(i).Set(reflect.ValueOf(value))
 			}
 		case reflect.Uint32:
-			value := fieldValue.Elem().Int()
+			value := fieldValue.Int()
 			if fieldValue.Kind() == uint32Value {
 				spbUint32 := &wrapperspb.UInt32Value{
 					Value: uint32(value),
@@ -155,7 +153,7 @@ func copy(dst, src interface{}) (err error) {
 				dstValue.Field(i).Set(reflect.ValueOf(value))
 			}
 		case reflect.Float64, reflect.Float32:
-			value := fieldValue.Elem().Float()
+			value := fieldValue.Float()
 			if fieldValue.Kind() == doubleValue {
 				spbDouble := &wrapperspb.DoubleValue{
 					Value: value,
@@ -173,22 +171,10 @@ func copy(dst, src interface{}) (err error) {
 			timeValue := fieldValue.Elem().Int()
 			newTime := timestamppb.New(time.UnixMilli(timeValue))
 			dstValue.Field(i).Set(reflect.ValueOf(newTime))
+		default:
+			return errors.New("unsupported data type")
 		}
 
 	}
 	return err
-}
-
-func main() {
-	objId, err := primitive.ObjectIDFromHex("5dbba1e31fd96208db5a00a1")
-	if err != nil {
-		panic(err)
-	}
-
-	saveMaterialGroupRequest := &v1.SaveMaterialGroupRequest{Id: &wrapperspb.StringValue{}, Name: "test", Order: 66}
-	materialGroup := &domain.MaterialGroup{Id: &objId}
-	if err := copy(materialGroup, saveMaterialGroupRequest); err != nil {
-		fmt.Printf("%v\n", err)
-	}
-	fmt.Printf("%+v\n", materialGroup)
 }
