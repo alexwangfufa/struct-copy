@@ -38,12 +38,20 @@ func init() {
 
 type MaterialGroup struct {
 	Id         *primitive.ObjectID `bson:"_id,omitempty"`
-	Name       string              `bson:"name"`
-	Type       MaterialGroupType   `bson:"type,omitempty"`
-	Scope      MaterialGroupScope  `bson:"scope,omitempty"`
-	Order      int64               `bson:"order"`
-	CreateTime time.Time           `bson:"createTime,omitempty"`
-	UpdateTime time.Time           `bson:"updateTime"`
+	Ut64       uint64
+	OrgId      string
+	UserId     string
+	Ut32       uint32
+	Name       string             `bson:"name"`
+	Type       MaterialGroupType  `bson:"type,omitempty"`
+	Scope      MaterialGroupScope `bson:"scope,omitempty"`
+	Order      int64              `bson:"order"`
+	It         int32
+	IsValid    bool      `bson:"isValid"`
+	StoryPoint float64   `bson:"storyPoint"`
+	Point      float32   `bson:"point"`
+	CreateTime time.Time `bson:"createTime,omitempty"`
+	UpdateTime time.Time `bson:"updateTime"`
 }
 
 func ParseMaterialGroupType(s string) (*MaterialGroupType, error) {

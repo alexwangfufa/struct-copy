@@ -10,6 +10,7 @@ import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	"google.golang.org/protobuf/types/known/timestamppb"
 	wrapperspb "google.golang.org/protobuf/types/known/wrapperspb"
 	reflect "reflect"
 	sync "sync"
@@ -27,13 +28,21 @@ type SaveMaterialGroupRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id     *wrapperspb.StringValue `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	OrgId  string                  `protobuf:"bytes,2,opt,name=orgId,proto3" json:"orgId,omitempty"`
-	UserId *wrapperspb.StringValue `protobuf:"bytes,3,opt,name=userId,proto3" json:"userId,omitempty"` // optional 如果没有，则表示是企业话术组
-	Name   string                  `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
-	Type   *wrapperspb.StringValue `protobuf:"bytes,5,opt,name=type,proto3" json:"type,omitempty"`
-	Scope  *wrapperspb.StringValue `protobuf:"bytes,6,opt,name=scope,proto3" json:"scope,omitempty"`
-	Order  int64                   `protobuf:"varint,7,opt,name=order,proto3" json:"order,omitempty"`
+	Id         *wrapperspb.StringValue `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	OrgId      string                  `protobuf:"bytes,2,opt,name=orgId,proto3" json:"orgId,omitempty"`
+	UserId     *wrapperspb.StringValue `protobuf:"bytes,3,opt,name=userId,proto3" json:"userId,omitempty"` // optional 如果没有，则表示是企业话术组
+	Name       string                  `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
+	IsValid    *wrapperspb.BoolValue   `protobuf:"bytes"`
+	It         *wrapperspb.Int32Value
+	Ut32       *wrapperspb.UInt32Value
+	Ut64       *wrapperspb.UInt64Value
+	StoryPoint *wrapperspb.DoubleValue `protobuf:"bytes"`
+	Point      *wrapperspb.FloatValue  `protobuf:"bytes"`
+	Type       *wrapperspb.StringValue `protobuf:"bytes,5,opt,name=type,proto3" json:"type,omitempty"`
+	Scope      *wrapperspb.StringValue `protobuf:"bytes,6,opt,name=scope,proto3" json:"scope,omitempty"`
+	Order      int64                   `protobuf:"varint,7,opt,name=order,proto3" json:"order,omitempty"`
+	UpdateTime *timestamppb.Timestamp
+	CreateTime *timestamppb.Timestamp
 }
 
 func (x *SaveMaterialGroupRequest) Reset() {
