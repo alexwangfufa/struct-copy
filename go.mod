@@ -1,4 +1,4 @@
-module struct-copy
+module github.com/alexwangfufa/struct-copy
 
 go 1.17
 
