@@ -148,7 +148,7 @@ func copy(dst, src interface{}) error {
 			// if dstField type is StringValue
 			if dstFieldValue.Kind() == reflect.String {
 				dstFieldValue.SetString(value)
-			} else if dstFieldValue.Elem().Kind() == objectID {
+			} else if dstFieldValue.Kind() == objectID {
 				id, err := primitive.ObjectIDFromHex(value)
 				if err != nil {
 					return err
