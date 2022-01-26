@@ -6,7 +6,7 @@ import (
 	"google.golang.org/protobuf/types/known/wrapperspb"
 	v1 "struct-copy/example/api/material-group/v1"
 	"struct-copy/example/domain"
-	"struct-copy/pkg/struct-copy/copier"
+	"struct-copy/pkg/copier"
 	"testing"
 	"time"
 )
