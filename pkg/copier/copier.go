@@ -147,7 +147,13 @@ func copy(dst, src interface{}) error {
 			value := fieldValue.String()
 			// if dstField type is StringValue
 			if dstFieldValue.Kind() == reflect.String {
-				dstFieldValue.Set(reflect.ValueOf(value))
+				dstFieldValue.SetString(value)
+			} else if dstFieldValue.Elem().Kind() == objectID {
+				id, err := primitive.ObjectIDFromHex(value)
+				if err != nil {
+					return err
+				}
+				dstFieldValue.Set(reflect.ValueOf(id))
 			} else {
 				spbString := &wrapperspb.StringValue{
 					Value: value,

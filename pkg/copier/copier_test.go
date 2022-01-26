@@ -1,10 +1,10 @@
 package copier
 
 import (
+	"fmt"
 	v1 "github.com/alexwangfufa/struct-copy/example/api/material-group/v1"
 	"github.com/alexwangfufa/struct-copy/example/domain"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.uber.org/zap"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"google.golang.org/protobuf/types/known/wrapperspb"
 	"testing"
@@ -35,7 +35,7 @@ func Test_Copier(t *testing.T) {
 		ErrorOccur bool
 	}{
 		{"copyObjectID2String", []interface{}{&v1.MaterialGroupModel{}, &domain.MaterialGroup{Id: &objectID}}, false},
-		{"copyString2ObjectID", []interface{}{&domain.MaterialGroup{}, &v1.MaterialGroupModel{Id: "5dbba1e31fd96208db5a00a1"}}, false},
+		{"copyString2ObjectID", []interface{}{&domain.MaterialGroup{}, &v1.MaterialGroupModel{Id: "5dbba1e31fd96208db5a00a2"}}, false},
 		{"copyStringValue2ObjectID", []interface{}{&domain.MaterialGroup{}, &v1.SaveMaterialGroupRequest{Id: stringValue}}, false},
 		{"copyObjectID2StringValue", []interface{}{&v1.SaveMaterialGroupRequest{}, &domain.MaterialGroup{Id: &objectID}}, false},
 		{"copyString2String", []interface{}{&domain.MaterialGroup{}, &v1.MaterialGroupModel{Name: "string2string"}}, false},
@@ -61,15 +61,14 @@ func Test_Copier(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.Name, func(t *testing.T) {
-			err := Copy(testCase.Req[0], testCases[1])
+			err := Copy(testCase.Req[0], testCase.Req[1])
 			if testCase.ErrorOccur {
 				if err == nil {
-					zap.L().Error("expect occur exception, but not found")
 					t.FailNow()
 				}
 			} else {
 				if err != nil {
-					zap.L().Error("occur error:", zap.Error(err))
+					fmt.Printf("error occur: %v\n", err)
 					t.FailNow()
 				}
 			}
