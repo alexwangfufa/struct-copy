@@ -64,9 +64,9 @@ func copy(dst, src interface{}) error {
 	fieldNum := dstType.NumField()
 
 	for i := 0; i < fieldNum; i++ {
-		field := dstType.Field(i)
+		fieldType := dstType.Field(i)
 		// 找到src中与dst相同字段的value
-		fieldValue := srcValue.FieldByName(field.Name)
+		fieldValue := srcValue.FieldByName(fieldType.Name)
 
 		dstFieldValue := dstValue.Field(i)
 
@@ -154,6 +154,12 @@ func copy(dst, src interface{}) error {
 					return err
 				}
 				dstFieldValue.Set(reflect.ValueOf(id))
+			} else if fieldType.Type.Kind() == reflect.Ptr && fieldType.Type.Elem().Kind() == objectID {
+				id, err := primitive.ObjectIDFromHex(value)
+				if err != nil {
+					return err
+				}
+				dstFieldValue.Set(reflect.ValueOf(&id))
 			} else {
 				spbString := &wrapperspb.StringValue{
 					Value: value,
@@ -178,10 +184,8 @@ func copy(dst, src interface{}) error {
 		case reflect.Int32:
 			value := fieldValue.Int()
 			// if dstFieldValue type is Int32Value
-			if dstFieldValue.Kind() == int32Value {
-				spbInt32 := &wrapperspb.Int32Value{
-					Value: int32(value),
-				}
+			if fieldType.Type.Kind() == reflect.Ptr && fieldType.Type.Elem().Kind() == int32Value {
+				spbInt32 := wrapperspb.Int32(int32(value))
 				dstFieldValue.Set(reflect.ValueOf(spbInt32))
 			} else {
 				dstFieldValue.Set(reflect.ValueOf(value))
