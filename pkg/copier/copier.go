@@ -86,11 +86,9 @@ func copy(dst, src interface{}) error {
 		switch fieldValue.Kind() {
 		// StringValue to string, if srcField name is id, StringValue to primitive.ObjectID
 		case stringValue:
-			println("step into " + field.Name)
 			value := fieldValue.FieldByName("Value").String()
 
 			if dstFieldValue.Kind() == reflect.String {
-				println(dstFieldValue.Kind().String())
 				dstFieldValue.SetString(value)
 			} else {
 				id, err := primitive.ObjectIDFromHex(value)
@@ -134,11 +132,15 @@ func copy(dst, src interface{}) error {
 		case pbTimestamp:
 			dstFieldValue.Set(reflect.ValueOf(fieldValue))
 
-		// primitive.ObjectID to StringValue
+		// primitive.ObjectID to StringValue or string
 		case objectID:
 			value := fieldValue.MethodByName("Hex").Call(nil)
-			id := &wrapperspb.StringValue{Value: value[0].String()}
-			dstFieldValue.Set(reflect.ValueOf(id))
+			if dstFieldValue.Kind() == reflect.String {
+				dstFieldValue.Set(reflect.ValueOf(value[0].String()))
+			} else {
+				id := &wrapperspb.StringValue{Value: value[0].String()}
+				dstFieldValue.Set(reflect.ValueOf(id))
+			}
 
 		// string to StringValue or String
 		case reflect.String:

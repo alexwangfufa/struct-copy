@@ -40,7 +40,7 @@ type SaveMaterialGroupRequest struct {
 	Point      *wrapperspb.FloatValue  `protobuf:"bytes"`
 	Type       *wrapperspb.StringValue `protobuf:"bytes,5,opt,name=type,proto3" json:"type,omitempty"`
 	Scope      *wrapperspb.StringValue `protobuf:"bytes,6,opt,name=scope,proto3" json:"scope,omitempty"`
-	Order      int64                   `protobuf:"varint,7,opt,name=order,proto3" json:"order,omitempty"`
+	Order      *wrapperspb.Int64Value  `protobuf:"varint,7,opt,name=order,proto3" json:"order,omitempty"`
 	UpdateTime *timestamppb.Timestamp
 	CreateTime *timestamppb.Timestamp
 }
@@ -121,7 +121,7 @@ func (x *SaveMaterialGroupRequest) GetScope() *wrapperspb.StringValue {
 
 func (x *SaveMaterialGroupRequest) GetOrder() int64 {
 	if x != nil {
-		return x.Order
+		return x.Order.Value
 	}
 	return 0
 }
